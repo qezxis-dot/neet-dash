@@ -1,0 +1,77 @@
+{
+  "name": "MockTest",
+  "type": "object",
+  "properties": {
+    "test_name": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "physics_marks": {
+      "type": "number",
+      "default": 0
+    },
+    "chemistry_marks": {
+      "type": "number",
+      "default": 0
+    },
+    "biology_marks": {
+      "type": "number",
+      "default": 0
+    },
+    "total_marks": {
+      "type": "number",
+      "default": 0
+    },
+    "max_marks": {
+      "type": "number",
+      "default": 720
+    },
+    "physics_correct": {
+      "type": "number",
+      "default": 0
+    },
+    "chemistry_correct": {
+      "type": "number",
+      "default": 0
+    },
+    "biology_correct": {
+      "type": "number",
+      "default": 0
+    },
+    "physics_wrong": {
+      "type": "number",
+      "default": 0
+    },
+    "chemistry_wrong": {
+      "type": "number",
+      "default": 0
+    },
+    "biology_wrong": {
+      "type": "number",
+      "default": 0
+    },
+    "time_taken": {
+      "type": "number"
+    },
+    "accuracy": {
+      "type": "number",
+      "default": 0
+    },
+    "percentile": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "user_id"
+  ]
+}

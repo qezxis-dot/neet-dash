@@ -1,0 +1,91 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "target_year": {
+      "type": "number"
+    },
+    "target_score": {
+      "type": "number"
+    },
+    "daily_goal_hours": {
+      "type": "number",
+      "default": 8
+    },
+    "study_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "longest_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "xp": {
+      "type": "number",
+      "default": 0
+    },
+    "level": {
+      "type": "number",
+      "default": 1
+    },
+    "total_study_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "mcqs_solved": {
+      "type": "number",
+      "default": 0
+    },
+    "mcqs_correct": {
+      "type": "number",
+      "default": 0
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "dark",
+        "light"
+      ],
+      "default": "dark"
+    },
+    "accent_color": {
+      "type": "string",
+      "default": "purple"
+    },
+    "notifications_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_active": {
+      "type": "string",
+      "format": "date"
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "bio": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "username"
+  ]
+}

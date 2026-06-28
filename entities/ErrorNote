@@ -1,0 +1,60 @@
+{
+  "name": "ErrorNote",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology"
+      ]
+    },
+    "chapter": {
+      "type": "string"
+    },
+    "error_type": {
+      "type": "string",
+      "enum": [
+        "concept_error",
+        "formula_error",
+        "calculation_error",
+        "guess",
+        "silly_mistake",
+        "time_management"
+      ],
+      "default": "concept_error"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "correct_answer": {
+      "type": "string"
+    },
+    "my_answer": {
+      "type": "string"
+    },
+    "is_revised": {
+      "type": "boolean",
+      "default": false
+    },
+    "revision_count": {
+      "type": "number",
+      "default": 0
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "question",
+    "subject",
+    "user_id"
+  ]
+}

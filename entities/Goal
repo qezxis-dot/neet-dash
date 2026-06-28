@@ -1,0 +1,55 @@
+{
+  "name": "Goal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "target"
+      ],
+      "default": "daily"
+    },
+    "target_value": {
+      "type": "number"
+    },
+    "current_value": {
+      "type": "number",
+      "default": 0
+    },
+    "unit": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "target_value",
+    "user_id"
+  ]
+}

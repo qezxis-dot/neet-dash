@@ -1,0 +1,88 @@
+{
+  "name": "Chapter",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ],
+      "default": "Medium"
+    },
+    "completion": {
+      "type": "number",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 100
+    },
+    "revision_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed",
+        "needs_revision"
+      ],
+      "default": "not_started"
+    },
+    "mcqs_solved": {
+      "type": "number",
+      "default": 0
+    },
+    "mcqs_correct": {
+      "type": "number",
+      "default": 0
+    },
+    "is_weak": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_revised": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_revision": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "name",
+    "subject",
+    "user_id"
+  ]
+}

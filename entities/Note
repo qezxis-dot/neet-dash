@@ -1,0 +1,57 @@
+{
+  "name": "Note",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "General"
+      ]
+    },
+    "chapter_id": {
+      "type": "string"
+    },
+    "chapter_name": {
+      "type": "string"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_starred": {
+      "type": "boolean",
+      "default": false
+    },
+    "color": {
+      "type": "string",
+      "default": "purple"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "word_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "user_id"
+  ]
+}

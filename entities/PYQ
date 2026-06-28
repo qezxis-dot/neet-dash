@@ -1,0 +1,84 @@
+{
+  "name": "PYQ",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "number"
+    },
+    "exam_name": {
+      "type": "string",
+      "default": "NEET"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "All"
+      ]
+    },
+    "chapter": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "English",
+        "Hindi",
+        "Both"
+      ],
+      "default": "English"
+    },
+    "description": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "total_marks": {
+      "type": "number"
+    },
+    "total_questions": {
+      "type": "number"
+    },
+    "views": {
+      "type": "number",
+      "default": 0
+    },
+    "downloads": {
+      "type": "number",
+      "default": 0
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_admin_content": {
+      "type": "boolean",
+      "default": false
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "year",
+    "subject"
+  ]
+}

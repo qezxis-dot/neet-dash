@@ -1,0 +1,50 @@
+{
+  "name": "StudySession",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "General"
+      ]
+    },
+    "chapter": {
+      "type": "string"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "session_type": {
+      "type": "string",
+      "enum": [
+        "pomodoro",
+        "custom",
+        "revision",
+        "mock_test"
+      ],
+      "default": "custom"
+    },
+    "xp_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "user_id"
+  ]
+}

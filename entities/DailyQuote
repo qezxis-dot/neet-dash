@@ -1,0 +1,33 @@
+{
+  "name": "DailyQuote",
+  "type": "object",
+  "properties": {
+    "quote": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "motivation",
+        "science",
+        "success",
+        "study"
+      ],
+      "default": "motivation"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "quote"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "Formula",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "formula_text": {
+      "type": "string"
+    },
+    "latex": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology"
+      ]
+    },
+    "chapter": {
+      "type": "string"
+    },
+    "chapter_id": {
+      "type": "string"
+    },
+    "is_important": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "is_admin_formula": {
+      "type": "boolean",
+      "default": false
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "subject"
+  ]
+}

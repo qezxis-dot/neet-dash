@@ -1,0 +1,66 @@
+{
+  "name": "Resource",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "pdf",
+        "image",
+        "zip",
+        "docx",
+        "other"
+      ]
+    },
+    "file_size": {
+      "type": "number"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "General"
+      ]
+    },
+    "chapter": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "notes",
+        "textbook",
+        "question_bank",
+        "video_notes",
+        "other"
+      ]
+    },
+    "downloads": {
+      "type": "number",
+      "default": 0
+    },
+    "is_admin_content": {
+      "type": "boolean",
+      "default": false
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "file_url",
+    "user_id"
+  ]
+}

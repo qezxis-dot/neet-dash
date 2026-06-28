@@ -1,0 +1,53 @@
+{
+  "name": "RevisionTask",
+  "type": "object",
+  "properties": {
+    "chapter_id": {
+      "type": "string"
+    },
+    "chapter_name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "Physics",
+        "Chemistry",
+        "Biology"
+      ]
+    },
+    "revision_number": {
+      "type": "number",
+      "default": 1
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "skipped",
+        "overdue"
+      ],
+      "default": "pending"
+    },
+    "interval_days": {
+      "type": "number"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "chapter_id",
+    "scheduled_date",
+    "user_id"
+  ]
+}
