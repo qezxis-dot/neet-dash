@@ -68,6 +68,7 @@ const TABS = [
   { id: 'users', label: '👥 Users', icon: '👥' },
   { id: 'formulas', label: '⚗️ Formula Seeder', icon: '⚗️' },
   { id: 'announcements', label: '📢 Announcements', icon: '📢' },
+  { id: 'pyq', label: '📄 PYQ Upload', icon: '📄' },
   { id: 'content', label: '🗂️ Content', icon: '🗂️' },
 ];
 
@@ -95,6 +96,16 @@ export default function Admin() {
 
   // Content stats
   const [contentStats, setContentStats] = useState({ pyqs: 0, resources: 0 });
+
+  // PYQ Upload
+  const [pyqs, setPyqs] = useState([]);
+  const [pyqForm, setPyqForm] = useState({ title: '', year: new Date().getFullYear(), subject: 'Physics', chapter: '', difficulty: 'Medium', language: 'English', description: '', total_questions: '', total_marks: '' });
+  const [pyqFile, setPyqFile] = useState(null);
+  const [pyqThumbnail, setPyqThumbnail] = useState(null);
+  const [pyqUploading, setPyqUploading] = useState(false);
+  const [pyqSaving, setPyqSaving] = useState(false);
+  const [showPyqForm, setShowPyqForm] = useState(false);
+  const [pyqUploadProgress, setPyqUploadProgress] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -126,6 +137,7 @@ export default function Admin() {
       });
       setUsers(us);
       setAnnouncements(anns);
+      setPyqs(pq);
       setLoading(false);
     };
     load();
@@ -183,6 +195,62 @@ export default function Admin() {
   const toggleAnnPin = async (ann) => {
     const updated = await db.entities.Announcement.update(ann.id, { is_pinned: !ann.is_pinned });
     setAnnouncements(prev => prev.map(a => a.id === ann.id ? updated : a));
+  };
+
+  const savePyq = async () => {
+    if (!pyqForm.title.trim() || !pyqFile) return;
+    setPyqSaving(true);
+    try {
+      // Upload PDF
+      setPyqUploadProgress('Uploading PDF...');
+      setPyqUploading(true);
+      const pdfRes = await db.integrations.Core.UploadFile({ file: pyqFile });
+      const pdfUrl = pdfRes.file_url;
+
+      // Upload thumbnail if provided
+      let thumbnailUrl = '';
+      if (pyqThumbnail) {
+        setPyqUploadProgress('Uploading thumbnail...');
+        const thumbRes = await db.integrations.Core.UploadFile({ file: pyqThumbnail });
+        thumbnailUrl = thumbRes.file_url;
+      }
+      setPyqUploading(false);
+      setPyqUploadProgress('Saving to database...');
+
+      const payload = {
+        ...pyqForm,
+        year: Number(pyqForm.year),
+        total_questions: pyqForm.total_questions ? Number(pyqForm.total_questions) : null,
+        total_marks: pyqForm.total_marks ? Number(pyqForm.total_marks) : null,
+        pdf_url: pdfUrl,
+        thumbnail_url: thumbnailUrl || null,
+        is_published: true,
+        is_admin_content: true,
+        created_by: user.id,
+      };
+
+      const created = await db.entities.PYQ.create(payload);
+      setPyqs(prev => [created, ...prev]);
+      setStats(s => ({ ...s, pyqs: s.pyqs + 1 }));
+      setPyqForm({ title: '', year: new Date().getFullYear(), subject: 'Physics', chapter: '', difficulty: 'Medium', language: 'English', description: '', total_questions: '', total_marks: '' });
+      setPyqFile(null);
+      setPyqThumbnail(null);
+      setShowPyqForm(false);
+      setPyqUploadProgress('');
+    } catch (err) {
+      alert('Upload failed: ' + err.message);
+    } finally {
+      setPyqSaving(false);
+      setPyqUploading(false);
+      setPyqUploadProgress('');
+    }
+  };
+
+  const deletePyq = async (id) => {
+    if (!confirm('Delete this PYQ paper? This cannot be undone.')) return;
+    await db.entities.PYQ.delete(id);
+    setPyqs(prev => prev.filter(p => p.id !== id));
+    setStats(s => ({ ...s, pyqs: s.pyqs - 1 }));
   };
 
   const clearAllChapters = async () => {
@@ -504,6 +572,137 @@ export default function Admin() {
       )}
 
       {/* ── CONTENT MANAGEMENT ── */}
+      {tab === 'pyq' && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+          <div className="glass-card rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-heading font-bold text-foreground text-base">📄 PYQ Papers</h3>
+                <p className="text-muted-foreground text-xs mt-0.5">{pyqs.length} papers uploaded</p>
+              </div>
+              <button onClick={() => setShowPyqForm(true)} className="btn-primary text-sm">+ Upload PYQ</button>
+            </div>
+
+            {/* Upload Form */}
+            <AnimatePresence>
+              {showPyqForm && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                  className="mb-6 p-5 rounded-2xl border border-purple-500/20 overflow-hidden"
+                  style={{ background: 'hsl(230 14% 11%)' }}>
+                  <h4 className="font-heading font-bold text-foreground text-sm mb-4">New PYQ Paper</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1 font-semibold">Title *</label>
+                      <input className="input-field" placeholder="e.g. NEET 2023 Physics Paper" value={pyqForm.title} onChange={e => setPyqForm(p => ({ ...p, title: e.target.value }))} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-muted-foreground mb-1 font-semibold">Year *</label>
+                        <input className="input-field" type="number" min="2000" max="2030" value={pyqForm.year} onChange={e => setPyqForm(p => ({ ...p, year: e.target.value }))} />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-muted-foreground mb-1 font-semibold">Subject *</label>
+                        <select className="input-field" value={pyqForm.subject} onChange={e => setPyqForm(p => ({ ...p, subject: e.target.value }))}>
+                          {['Physics', 'Chemistry', 'Biology', 'All'].map(s => <option key={s}>{s}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-muted-foreground mb-1 font-semibold">Difficulty</label>
+                        <select className="input-field" value={pyqForm.difficulty} onChange={e => setPyqForm(p => ({ ...p, difficulty: e.target.value }))}>
+                          {['Easy', 'Medium', 'Hard'].map(d => <option key={d}>{d}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-muted-foreground mb-1 font-semibold">Language</label>
+                        <select className="input-field" value={pyqForm.language} onChange={e => setPyqForm(p => ({ ...p, language: e.target.value }))}>
+                          {['English', 'Hindi', 'Both'].map(l => <option key={l}>{l}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-muted-foreground mb-1 font-semibold">Total Questions</label>
+                        <input className="input-field" type="number" placeholder="e.g. 180" value={pyqForm.total_questions} onChange={e => setPyqForm(p => ({ ...p, total_questions: e.target.value }))} />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-muted-foreground mb-1 font-semibold">Total Marks</label>
+                        <input className="input-field" type="number" placeholder="e.g. 720" value={pyqForm.total_marks} onChange={e => setPyqForm(p => ({ ...p, total_marks: e.target.value }))} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1 font-semibold">Chapter (optional)</label>
+                      <input className="input-field" placeholder="e.g. Full Paper / Mechanics" value={pyqForm.chapter} onChange={e => setPyqForm(p => ({ ...p, chapter: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1 font-semibold">Description (optional)</label>
+                      <textarea className="input-field" rows={2} placeholder="Short description of this paper..." value={pyqForm.description} onChange={e => setPyqForm(p => ({ ...p, description: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1 font-semibold">PDF File * <span className="text-purple-400">(required)</span></label>
+                      <input type="file" accept=".pdf" className="input-field text-sm" onChange={e => setPyqFile(e.target.files[0])} />
+                      {pyqFile && <p className="text-xs text-emerald-400 mt-1">✓ {pyqFile.name} ({(pyqFile.size / 1024 / 1024).toFixed(1)} MB)</p>}
+                    </div>
+                    <div>
+                      <label className="block text-xs text-muted-foreground mb-1 font-semibold">Thumbnail Image (optional)</label>
+                      <input type="file" accept="image/*" className="input-field text-sm" onChange={e => setPyqThumbnail(e.target.files[0])} />
+                      {pyqThumbnail && <p className="text-xs text-emerald-400 mt-1">✓ {pyqThumbnail.name}</p>}
+                    </div>
+                  </div>
+
+                  {pyqUploadProgress && (
+                    <div className="mt-3 flex items-center gap-2 text-xs text-purple-300">
+                      <div className="w-3 h-3 border-2 border-purple-400/30 border-t-purple-400 rounded-full animate-spin" />
+                      {pyqUploadProgress}
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 mt-5">
+                    <button onClick={() => { setShowPyqForm(false); setPyqFile(null); setPyqThumbnail(null); }} className="btn-secondary flex-1 text-sm">Cancel</button>
+                    <button onClick={savePyq} disabled={pyqSaving || pyqUploading || !pyqFile || !pyqForm.title.trim()} className="btn-primary flex-1 text-sm justify-center">
+                      {pyqUploading ? '⏫ Uploading...' : pyqSaving ? '💾 Saving...' : '📤 Upload PYQ'}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* PYQ List */}
+            {pyqs.length === 0 ? (
+              <div className="py-12 text-center">
+                <div className="text-4xl mb-3">📄</div>
+                <p className="text-muted-foreground text-sm">No PYQ papers yet. Upload your first paper!</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {pyqs.map(p => (
+                  <div key={p.id} className="flex items-center gap-4 p-3 rounded-xl" style={{ background: 'hsl(230 14% 11%)' }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: 'rgba(168,204,255,0.1)' }}>📄</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-foreground truncate">{p.title}</p>
+                      <div className="flex gap-2 mt-0.5 flex-wrap">
+                        <span className="text-[10px] text-muted-foreground">{p.year}</span>
+                        <span className="text-[10px] text-muted-foreground">•</span>
+                        <span className="text-[10px] text-muted-foreground">{p.subject}</span>
+                        {p.difficulty && <><span className="text-[10px] text-muted-foreground">•</span><span className="text-[10px] text-muted-foreground">{p.difficulty}</span></>}
+                        {p.total_questions && <><span className="text-[10px] text-muted-foreground">•</span><span className="text-[10px] text-muted-foreground">{p.total_questions} Qs</span></>}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      {p.pdf_url && (
+                        <a href={p.pdf_url} target="_blank" rel="noreferrer" className="text-xs text-blue-400 hover:text-blue-300 px-2 py-1 rounded-lg hover:bg-blue-400/10 transition-colors">View</a>
+                      )}
+                      <button onClick={() => deletePyq(p.id)} className="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded-lg hover:bg-red-400/10 transition-colors">Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
+
       {tab === 'content' && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div className="glass-card rounded-2xl p-6">
