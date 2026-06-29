@@ -42,7 +42,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-md relative z-10">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white font-bold">N</div>
+            <img src="/logo.png" alt="NEET Command" className="w-10 h-10 rounded-xl flex-shrink-0" />
             <span className="font-heading font-bold text-lg text-white">NEET Command</span>
           </Link>
           <h1 className="font-heading font-bold text-3xl text-white mb-2">New password</h1>
