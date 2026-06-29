@@ -69,7 +69,7 @@ export default function Landing() {
       style={scrolled ? { background: 'hsl(230 14% 11%)', borderBottom: '1.5px solid rgba(255,255,255,0.06)', boxShadow: '0 4px 24px rgba(0,0,0,0.4)' } : {}}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl clay-purple flex items-center justify-center text-white font-bold text-sm">N</div>
+            <img src="/logo.png" alt="NEET Command" className="w-9 h-9 rounded-xl flex-shrink-0" />
             <span className="font-heading font-bold text-lg text-foreground">NEET CSS </span>
             <span className="hidden sm:inline text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: 'rgba(110,231,160,0.18)', border: '1.5px solid rgba(110,231,160,0.3)', color: '#8EFFC4' }}>FREE</span>
           </div>
@@ -379,7 +379,7 @@ export default function Landing() {
       <footer className="relative z-10 border-t border-white/5 py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl clay-purple flex items-center justify-center text-white font-bold text-sm">N</div>
+            <img src="/logo.png" alt="NEET Command" className="w-9 h-9 rounded-xl flex-shrink-0" />
             <div>
               <span className="font-heading font-bold text-foreground">NEET Command</span>
               <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: 'rgba(110,231,160,0.12)', color: '#8EFFC4', border: '1.5px solid rgba(110,231,160,0.25)' }}>FREE</span>
