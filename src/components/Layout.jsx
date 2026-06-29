@@ -27,14 +27,14 @@ const BOTTOM_MENU = [
   { path: '/profile', icon: '👤', label: 'Profile' },
 ];
 
-
 const MOBILE_NAV = [
-  { path: '/dashboard',  icon: '⚡', label: 'Home' },
-  { path: '/subjects',   icon: '📚', label: 'Subjects' },
-  { path: '/notes',      icon: '📝', label: 'Notes' },
-  { path: '/timer',      icon: '⏱️', label: 'Timer' },
-  { path: '/settings',   icon: '⚙️', label: 'More' },
+  { path: '/dashboard', icon: '⚡', label: 'Home' },
+  { path: '/subjects',  icon: '📚', label: 'Subjects' },
+  { path: '/notes',     icon: '📝', label: 'Notes' },
+  { path: '/timer',     icon: '⏱️', label: 'Timer' },
+  { path: '/settings',  icon: '⚙️', label: 'More' },
 ];
+
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -261,8 +261,8 @@ export default function Layout() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto scrollbar-thin bg-background">
-          <div className="page-transition page-content">
+        <main className="flex-1 overflow-y-auto scrollbar-thin bg-background pb-20 md:pb-0">
+          <div className="page-transition">
             <Outlet />
           </div>
         </main>
@@ -338,13 +338,16 @@ export default function Layout() {
       </AnimatePresence>
 
       {/* Mobile Bottom Nav */}
-      <nav className="mobile-nav md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 flex md:hidden items-center justify-around border-t border-white/5"
+        style={{ background: 'hsl(230 15% 10% / 0.97)', backdropFilter: 'blur(20px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {MOBILE_NAV.map(item => {
           const active = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
           return (
-            <Link key={item.path} to={item.path} className={`mobile-nav-item ${active ? 'active' : ''}`}>
-              <span className="nav-icon">{item.icon}</span>
-              <span>{item.label}</span>
+            <Link key={item.path} to={item.path}
+              className="flex flex-col items-center gap-0.5 py-2 px-3 rounded-xl transition-all"
+              style={{ color: active ? '#C4A8FF' : 'hsl(230 10% 50%)', background: active ? 'rgba(155,110,243,0.12)' : 'transparent', minWidth: '52px' }}>
+              <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>{item.icon}</span>
+              <span style={{ fontSize: '10px', fontWeight: 600 }}>{item.label}</span>
             </Link>
           );
         })}
