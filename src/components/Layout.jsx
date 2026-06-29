@@ -86,7 +86,7 @@ export default function Layout() {
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
         <Link to="/dashboard" className="flex items-center gap-3 flex-1">
-          <div className="w-9 h-9 rounded-xl clay-purple flex items-center justify-center text-white font-bold text-sm flex-shrink-0">N</div>
+          <img src="/logo.png" alt="NEET Command" className="w-9 h-9 rounded-xl flex-shrink-0" />
           {(sidebarOpen || mobile) && (
             <div>
               <div className="text-sm font-heading font-bold text-foreground leading-none">NEET Command</div>
