@@ -27,6 +27,14 @@ const BOTTOM_MENU = [
   { path: '/profile', icon: '👤', label: 'Profile' },
 ];
 
+
+const MOBILE_NAV = [
+  { path: '/dashboard',  icon: '⚡', label: 'Home' },
+  { path: '/subjects',   icon: '📚', label: 'Subjects' },
+  { path: '/notes',      icon: '📝', label: 'Notes' },
+  { path: '/timer',      icon: '⏱️', label: 'Timer' },
+  { path: '/settings',   icon: '⚙️', label: 'More' },
+];
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -140,6 +148,15 @@ export default function Layout() {
             </Link>
           );
         })}
+        {(sidebarOpen || mobile) && (
+          <a
+            href="mailto:admin@neetdash.com?subject=Bug Report / Feature Request&body=Hi Admin,%0A%0A[Describe your bug or feature request here]%0A%0APage: "
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs text-white/40 hover:text-white/70 hover:bg-white/5 transition-all border border-dashed border-white/8 hover:border-purple-500/25 mb-1"
+          >
+            <span className="text-base">🐛</span>
+            <span className="font-medium">Report a Bug / Request Feature</span>
+          </a>
+        )}
         {(sidebarOpen || mobile) && user && (
           <div className="mt-3 p-3 rounded-2xl border border-white/6" style={{ background: 'hsl(230 14% 11%)', boxShadow: '0 1px 0 rgba(255,255,255,0.05) inset, 0 -2px 0 rgba(0,0,0,0.3) inset, 0 4px 12px rgba(0,0,0,0.3)' }}>
             <div className="flex items-center gap-3 mb-2">
@@ -245,7 +262,7 @@ export default function Layout() {
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto scrollbar-thin bg-background">
-          <div className="page-transition">
+          <div className="page-transition page-content">
             <Outlet />
           </div>
         </main>
@@ -319,6 +336,19 @@ export default function Layout() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="mobile-nav md:hidden">
+        {MOBILE_NAV.map(item => {
+          const active = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+          return (
+            <Link key={item.path} to={item.path} className={`mobile-nav-item ${active ? 'active' : ''}`}>
+              <span className="nav-icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }
