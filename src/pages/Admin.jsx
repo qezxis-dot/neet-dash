@@ -1,4 +1,5 @@
 import { db } from '@/lib/supabase/db';
+import { supabase } from '@/lib/supabase/client';
 
 import React, { useState, useEffect } from 'react';
 
@@ -113,17 +114,19 @@ export default function Admin() {
       setUser(u);
       if (u.role !== 'admin') { setLoading(false); return; }
 
-      const [fs, chs, us, ns, ss, mt, pq, en, anns] = await Promise.all([
+      const [fs, chs, ns, ss, mt, pq, en, anns, usersRes] = await Promise.all([
         db.entities.Formula.list('-created_date', 500),
         db.entities.Chapter.list('-created_date', 500),
-        db.entities.User.list('-created_date', 50),
         db.entities.Note.list('-created_date', 1),
         db.entities.StudySession.list('-created_date', 1),
         db.entities.MockTest.list('-created_date', 1),
         db.entities.PYQ.list('-created_date', 100),
         db.entities.ErrorNote.list('-created_date', 1),
         db.entities.Announcement.list('-created_date', 50),
+        supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(200),
       ]);
+
+      const us = usersRes.data || [];
 
       setStats({
         formulas: fs.length,
@@ -145,13 +148,13 @@ export default function Admin() {
 
   const loadUsers = async () => {
     setUsersLoading(true);
-    const us = await db.entities.User.list('-created_date', 50);
-    setUsers(us);
+    const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(200);
+    setUsers(data || []);
     setUsersLoading(false);
   };
 
   const changeUserRole = async (uid, newRole) => {
-    await db.entities.User.update(uid, { role: newRole });
+    await supabase.from('profiles').update({ role: newRole }).eq('id', uid);
     setUsers(prev => prev.map(u => u.id === uid ? { ...u, role: newRole } : u));
   };
 
@@ -398,7 +401,7 @@ export default function Admin() {
                           {u.role || 'user'}
                         </span>
                       </td>
-                      <td className="text-xs text-muted-foreground">{u.created_date ? new Date(u.created_date).toLocaleDateString() : '—'}</td>
+                      <td className="text-xs text-muted-foreground">{u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
                       <td>
                         {u.id !== user.id && (
                           <button
